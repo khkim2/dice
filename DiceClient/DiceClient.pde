@@ -2,7 +2,8 @@ import processing.net.*;
 
 //String ip = "127.0.0.1";
 //String ip = "192.168.2.1";
-String ip = "169.254.53.22";
+//String ip = "169.254.53.22";
+String ip = "192.168.2.39";
 int port = 8080;
 Client client; 
 
