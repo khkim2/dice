@@ -1,4 +1,17 @@
+import ddf.minim.spi.*;
+import ddf.minim.signals.*;
+import ddf.minim.*;
+import ddf.minim.analysis.*;
+import ddf.minim.ugens.*;
+import ddf.minim.effects.*;
+
 import processing.net.*;
+
+Minim minim;
+
+AudioPlayer beat;
+AudioPlayer[] phase1, phase2;
+AudioPlayer playing1, playing2;
 
 int port = 8080;       
 Server server;        
@@ -11,6 +24,54 @@ void setup()
 {
   size(400, 400);
   server = new Server(this, port);
+  
+  minim = new Minim(this);
+
+  beat = minim.loadFile("1_Beat_bip.mp3");
+  beat.printControls();
+  beat.setGain(-10);
+  beat.loop();
+
+  phase1 = new AudioPlayer[6];
+  phase2 = new AudioPlayer[6];
+  
+  for (int i = 0; i < 6; i++)
+  {
+    phase1[i] = minim.loadFile("A_" + (i+1) + "_bip.mp3");
+    phase2[i] = minim.loadFile("B_" + (i+1) + "_bip.mp3");
+  }
+}
+
+void setPlayer1(int index)
+{
+  if (playing1 != null) playing1.pause();
+    
+  phase1[index].cue(beat.position());
+  phase1[index].loop();
+
+  playing1 = phase1[index];    
+}
+
+void setPlayer2(int index)
+{
+  if (playing2 != null) playing2.pause();
+    
+  phase2[index].cue(beat.position());
+  phase2[index].loop();
+
+  playing2 = phase2[index];    
+}
+
+void keyPressed()
+{
+  if ('1' <= key && key <= '6')
+    setPlayer1(key - '1');
+  else if (key == 'q') setPlayer2(0);
+  else if (key == 'w') setPlayer2(1);
+  else if (key == 'e') setPlayer2(2);
+  else if (key == 'r') setPlayer2(3);
+  else if (key == 't') setPlayer2(4);
+  else if (key == 'y') setPlayer2(5);
 }
 
 void draw()
