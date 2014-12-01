@@ -9,7 +9,7 @@ import processing.net.*;
 
 Minim minim;
 
-AudioPlayer beat;
+AudioPlayer beat, scratch;
 AudioPlayer[] phase1, phase2;
 AudioPlayer playing1, playing2;
 
@@ -28,9 +28,10 @@ void setup()
   minim = new Minim(this);
 
   beat = minim.loadFile("1_Beat_bip.mp3");
-  beat.printControls();
   beat.setGain(-10);
   beat.loop();
+  
+  scratch = minim.loadFile("Scratch_EFX_bip.mp3");
 
   phase1 = new AudioPlayer[6];
   phase2 = new AudioPlayer[6];
@@ -45,6 +46,7 @@ void setup()
 void setPlayer1(int index)
 {
   if (playing1 != null) playing1.pause();
+  if (scratch.isPlaying()) scratch.pause();
     
   phase1[index].cue(beat.position());
   phase1[index].loop();
@@ -55,6 +57,7 @@ void setPlayer1(int index)
 void setPlayer2(int index)
 {
   if (playing2 != null) playing2.pause();
+  if (scratch.isPlaying()) scratch.pause();
     
   phase2[index].cue(beat.position());
   phase2[index].loop();
@@ -72,6 +75,17 @@ void keyPressed()
   else if (key == 'r') setPlayer2(3);
   else if (key == 't') setPlayer2(4);
   else if (key == 'y') setPlayer2(5);
+  else if (key == '0')
+  {
+    scratch.cue(0);
+    scratch.loop();
+    
+    if (playing1 != null) playing1.pause();
+    playing1 = null;
+    
+    if (playing2 != null) playing2.pause();
+    playing2 = null;
+  }
 }
 
 void draw()
