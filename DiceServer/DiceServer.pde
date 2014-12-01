@@ -112,4 +112,11 @@ void draw()
     sensorY / 9.8 * (height/2) + (height/2));
    
   text("" + number, 15, 15);  
+
+  stroke(255);
+  for (int i = 0; i < beat.bufferSize() - 1; i++)
+  {
+    line(i, 50 + beat.left.get(i)*50, i+1, 50 + beat.left.get(i+1)*50);
+    line(i, 150 + beat.right.get(i)*50, i+1, 150 + beat.right.get(i+1)*50);
+  }
 }
