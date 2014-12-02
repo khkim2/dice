@@ -7,6 +7,9 @@ import ddf.minim.effects.*;
 
 import processing.net.*;
 
+float GSENSOR_ROTATE = 26 * 3.14159f / 180.f;
+float DICE_THRESHOLD = 8.0;
+
 Minim minim;
 
 AudioPlayer beat, scratch;
@@ -16,8 +19,7 @@ AudioPlayer playing1, playing2;
 int port = 8080;       
 Server server;        
 
-float threshold = 8.0;
-float sensorX, sensorY, sensorZ;
+PVector sensor = new PVector();
 int number = 0;
 
 void setup()
@@ -98,39 +100,49 @@ void draw()
   if (thisClient != null) {
     String message = thisClient.readStringUntil('\n');
     if (message != null) {
-      String[] sensor = split(message, '|');
-      if (sensor.length != 3)
+      String[] value = split(message, '|');
+      if (value.length != 3)
       {
         println("ERROR: failed to parse message from client");
         return;
       }
+
+      sensor.x = float(value[0]);
+      sensor.y = float(value[1]);
+      sensor.z = float(value[2]);
+
+      PVector rotate_yz = new PVector(sensor.y, sensor.z);
+      rotate_yz.rotate(-31 * 3.14159 / 180);
+      sensor.y = rotate_yz.x;
+      sensor.z = rotate_yz.y;      
+
+      PVector rotate_xz = new PVector(sensor.x, sensor.z);
+      rotate_xz.rotate(-57 * 3.14159 / 180);
+      sensor.x = rotate_xz.x;
+      sensor.z = rotate_xz.y;      
       
-      sensorX = float(sensor[0]);
-      sensorY = float(sensor[1]);
-      sensorZ = float(sensor[2]);
+      //println("sensor: " + sensor.x + ", " + sensor.y + ", " + sensor.z);
       
-      println("sensor: " + sensorX + ", " + sensorY + ", " + sensorZ);
-      
-      if (sensorX > threshold) number = 1;
-      else if (sensorX < -threshold) number = 6;
-      else if (sensorY > threshold) number = 2;
-      else if (sensorY < -threshold) number = 5;
-      else if (sensorZ > threshold) number = 3;
-      else if (sensorZ < -threshold) number = 4;
+      if (sensor.x > DICE_THRESHOLD) number = 1;
+      else if (sensor.x < -DICE_THRESHOLD) number = 6;
+      else if (sensor.y > DICE_THRESHOLD) number = 2;
+      else if (sensor.y < -DICE_THRESHOLD) number = 5;
+      else if (sensor.z > DICE_THRESHOLD) number = 3;
+      else if (sensor.z < -DICE_THRESHOLD) number = 4;
       else number = 0;
     } 
   }
  
   line(width/2, height/2, 
-    sensorX / 9.8 * (width/2) + (width/2), 
-    sensorY / 9.8 * (height/2) + (height/2));
+    sensor.x / 9.8 * (width/2) + (width/2), 
+    sensor.y / 9.8 * (height/2) + (height/2));
    
   text("" + number, 15, 15);  
 
-  stroke(255);
-  for (int i = 0; i < beat.bufferSize() - 1; i++)
-  {
-    line(i, 50 + beat.left.get(i)*50, i+1, 50 + beat.left.get(i+1)*50);
-    line(i, 150 + beat.right.get(i)*50, i+1, 150 + beat.right.get(i+1)*50);
-  }
+//  stroke(255);
+//  for (int i = 0; i < beat.bufferSize() - 1; i++)
+//  {
+//    line(i, 50 + beat.left.get(i)*50, i+1, 50 + beat.left.get(i+1)*50);
+//    line(i, 150 + beat.right.get(i)*50, i+1, 150 + beat.right.get(i+1)*50);
+//  }
 }
