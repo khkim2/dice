@@ -67,6 +67,18 @@ void setPlayer2(int index)
   playing2 = phase2[index];    
 }
 
+void playScratch()
+{
+  scratch.cue(0);
+  scratch.loop();
+  
+  if (playing1 != null) playing1.pause();
+  playing1 = null;
+  
+  if (playing2 != null) playing2.pause();
+  playing2 = null;
+}
+
 void keyPressed()
 {
   if ('1' <= key && key <= '6')
@@ -77,17 +89,7 @@ void keyPressed()
   else if (key == 'r') setPlayer2(3);
   else if (key == 't') setPlayer2(4);
   else if (key == 'y') setPlayer2(5);
-  else if (key == '0')
-  {
-    scratch.cue(0);
-    scratch.loop();
-    
-    if (playing1 != null) playing1.pause();
-    playing1 = null;
-    
-    if (playing2 != null) playing2.pause();
-    playing2 = null;
-  }
+  else if (key == '0') playScratch();
 }
 
 void draw()
@@ -122,14 +124,27 @@ void draw()
       sensor.z = rotate_xz.y;      
       
       //println("sensor: " + sensor.x + ", " + sensor.y + ", " + sensor.z);
+
+      int new_number = -1;
       
-      if (sensor.x > DICE_THRESHOLD) number = 1;
-      else if (sensor.x < -DICE_THRESHOLD) number = 6;
-      else if (sensor.y > DICE_THRESHOLD) number = 2;
-      else if (sensor.y < -DICE_THRESHOLD) number = 5;
-      else if (sensor.z > DICE_THRESHOLD) number = 3;
-      else if (sensor.z < -DICE_THRESHOLD) number = 4;
-      else number = 0;
+      if (sensor.x > DICE_THRESHOLD) new_number = 1;
+      else if (sensor.x < -DICE_THRESHOLD) new_number = 6;
+      else if (sensor.y > DICE_THRESHOLD) new_number = 2;
+      else if (sensor.y < -DICE_THRESHOLD) new_number = 5;
+      else if (sensor.z > DICE_THRESHOLD) new_number = 3;
+      else if (sensor.z < -DICE_THRESHOLD) new_number = 4;
+      else new_number = 0;
+      
+      if (number != new_number)
+      {
+        println("update: " + number + " -> " + new_number);
+        number = new_number;
+        
+        if (number == 0)
+          playScratch();
+        else
+          setPlayer1(number - 1);
+      }
     } 
   }
  
@@ -139,10 +154,10 @@ void draw()
    
   text("" + number, 15, 15);  
 
-//  stroke(255);
-//  for (int i = 0; i < beat.bufferSize() - 1; i++)
-//  {
-//    line(i, 50 + beat.left.get(i)*50, i+1, 50 + beat.left.get(i+1)*50);
-//    line(i, 150 + beat.right.get(i)*50, i+1, 150 + beat.right.get(i+1)*50);
-//  }
+  stroke(255);
+  for (int i = 0; i < beat.bufferSize() - 1; i++)
+  {
+    line(i, 50 + beat.left.get(i)*50, i+1, 50 + beat.left.get(i+1)*50);
+    line(i, 150 + beat.right.get(i)*50, i+1, 150 + beat.right.get(i+1)*50);
+  }
 }
