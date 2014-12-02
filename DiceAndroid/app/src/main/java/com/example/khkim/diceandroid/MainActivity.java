@@ -93,6 +93,7 @@ public class MainActivity extends Activity implements SensorEventListener {
     }
 
     public class NetworkTask extends AsyncTask<Void, byte[], Boolean> {
+        boolean running;
         Socket nsocket; //Network Socket
         InputStream nis; //Network Input Stream
         OutputStream nos; //Network Output Stream
@@ -105,46 +106,61 @@ public class MainActivity extends Activity implements SensorEventListener {
         @Override
         protected Boolean doInBackground(Void... params) { //This runs on a different thread
             boolean result = false;
-            try {
-                Log.i("AsyncTask", "doInBackground: Creating socket");
-                SocketAddress sockaddr = new InetSocketAddress(IP, PORT);
-                nsocket = new Socket();
-                nsocket.connect(sockaddr, 5000); //10 second connection timeout
-                if (nsocket.isConnected()) {
-                    nis = nsocket.getInputStream();
-                    nos = nsocket.getOutputStream();
-                    Log.i("AsyncTask", "doInBackground: Socket created, streams assigned");
-                    Log.i("AsyncTask", "doInBackground: Waiting for inital data...");
-                    byte[] buffer = new byte[4096];
-                    int read = nis.read(buffer, 0, 4096); //This is blocking
-                    while(read != -1){
-                        byte[] tempdata = new byte[read];
-                        System.arraycopy(buffer, 0, tempdata, 0, read);
-                        publishProgress(tempdata);
-                        Log.i("AsyncTask", "doInBackground: Got some data");
-                        read = nis.read(buffer, 0, 4096); //This is blocking
-                    }
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-                Log.i("AsyncTask", "doInBackground: IOException");
-                result = true;
-            } catch (Exception e) {
-                e.printStackTrace();
-                Log.i("AsyncTask", "doInBackground: Exception");
-                result = true;
-            } finally {
+
+            running = true;
+            while (running) {
+
                 try {
-                    nis.close();
-                    nos.close();
-                    nsocket.close();
+                    Log.i("AsyncTask", "doInBackground: Creating socket");
+                    SocketAddress sockaddr = new InetSocketAddress(IP, PORT);
+                    nsocket = new Socket();
+                    nsocket.connect(sockaddr, 5000); //10 second connection timeout
+                    if (nsocket.isConnected()) {
+                        nis = nsocket.getInputStream();
+                        nos = nsocket.getOutputStream();
+                        Log.i("AsyncTask", "doInBackground: Socket created, streams assigned");
+                        Log.i("AsyncTask", "doInBackground: Waiting for inital data...");
+                        byte[] buffer = new byte[4096];
+                        int read = nis.read(buffer, 0, 4096); //This is blocking
+                        while (read != -1) {
+                            byte[] tempdata = new byte[read];
+                            System.arraycopy(buffer, 0, tempdata, 0, read);
+                            publishProgress(tempdata);
+                            Log.i("AsyncTask", "doInBackground: Got some data");
+                            read = nis.read(buffer, 0, 4096); //This is blocking
+                        }
+                    }
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    //e.printStackTrace();
+                    Log.i("AsyncTask", "doInBackground: IOException");
+                    result = true;
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    //e.printStackTrace();
+                    Log.i("AsyncTask", "doInBackground: Exception");
+                    result = true;
+                } finally {
+                    try {
+                        nis.close();
+                        nos.close();
+                        nsocket.close();
+                    } catch (IOException e) {
+                        //e.printStackTrace();
+                    } catch (Exception e) {
+                        //e.printStackTrace();
+                    }
+                    Log.i("AsyncTask", "doInBackground: Finished");
                 }
-                Log.i("AsyncTask", "doInBackground: Finished");
-            }
+
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    //e.printStackTrace();
+                }
+
+                Log.i("AsyncTask", "## Retry connection");
+
+            } // infinite loop
+
             return result;
         }
 
@@ -154,10 +170,10 @@ public class MainActivity extends Activity implements SensorEventListener {
                     //Log.i("AsyncTask", "SendDataToNetwork: Writing received message to socket");
                     nos.write(cmd.getBytes());
                 } else {
-                    Log.i("AsyncTask", "SendDataToNetwork: Cannot send message. Socket is closed");
+                    //Log.i("AsyncTask", "SendDataToNetwork: Cannot send message. Socket is closed");
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                //e.printStackTrace();
                 Log.i("AsyncTask", "SendDataToNetwork: Message send failed. Caught an exception");
             }
         }
@@ -169,11 +185,13 @@ public class MainActivity extends Activity implements SensorEventListener {
                 textStatus.setText(new String(values[0]));
             }
         }
+
         @Override
         protected void onCancelled() {
             Log.i("AsyncTask", "Cancelled.");
             btnStart.setVisibility(View.VISIBLE);
         }
+
         @Override
         protected void onPostExecute(Boolean result) {
             if (result) {
