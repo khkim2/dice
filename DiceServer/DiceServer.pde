@@ -29,19 +29,19 @@ void setup()
   
   minim = new Minim(this);
 
-  beat = minim.loadFile("1_Beat_bip.mp3");
+  beat = minim.loadFile("1_Beat_bip.wav");
   beat.setGain(-10);
   beat.loop();
   
-  scratch = minim.loadFile("Scratch_EFX_bip.mp3");
+  scratch = minim.loadFile("Scratch_EFX_bip.wav");
 
   phase1 = new AudioPlayer[6];
   phase2 = new AudioPlayer[6];
   
   for (int i = 0; i < 6; i++)
   {
-    phase1[i] = minim.loadFile("A_" + (i+1) + "_bip.mp3");
-    phase2[i] = minim.loadFile("B_" + (i+1) + "_bip.mp3");
+    phase1[i] = minim.loadFile("A_" + (i+1) + "_bip.wav");
+    phase2[i] = minim.loadFile("B_" + (i+1) + "_bip.wav");
   }
 }
 
