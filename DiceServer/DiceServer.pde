@@ -7,6 +7,9 @@ import ddf.minim.effects.*;
 
 import processing.net.*;
 
+import toxi.geom.*;
+import toxi.physics2d.*;
+
 float GSENSOR_ROTATE = 26 * 3.14159f / 180.f;
 float DICE_THRESHOLD = 8.0;
 
@@ -22,9 +25,20 @@ Server server;
 PVector sensor = new PVector();
 int number = 0;
 
+// Reference to physics world
+VerletPhysics2D physics;
+
+// A list of cluster objects
+Cluster cluster;
+Cluster2 cluster2;
+
+// Boolean that indicates whether we draw connections or not
+boolean showPhysics = true;
+boolean showParticles = true;
+
 void setup()
 {
-  size(400, 400);
+  size(1024, 768);
   server = new Server(this, port);
   
   minim = new Minim(this);
@@ -43,6 +57,14 @@ void setup()
     phase1[i] = minim.loadFile("A_" + (i+1) + "_bip.wav");
     phase2[i] = minim.loadFile("B_" + (i+1) + "_bip.wav");
   }
+
+  // Initialize the physics
+  physics = new VerletPhysics2D();
+  physics.setWorldBounds(new Rect(10, 10, width-20, height-20));
+
+  // Spawn a new random graph
+  cluster = new Cluster(8, 100, new Vec2D(width/5, height/1.6));
+  cluster2 = new Cluster2(6, 100, new Vec2D(width/1.3, height/3.3));
 }
 
 void setPlayer1(int index)
@@ -90,6 +112,12 @@ void keyPressed()
   else if (key == 't') setPlayer2(4);
   else if (key == 'y') setPlayer2(5);
   else if (key == '0') playScratch();
+
+  if (key == ' ') {
+    physics.clear();
+    cluster = new Cluster(int(random(2, 20)), random(10, width/4), new Vec2D(width/5, height/1.6));
+    cluster2 = new Cluster2(int(random(2, 20)), random(10, width/3), new Vec2D(width/1.3, height/3.3));
+  }
 }
 
 void draw()
@@ -98,6 +126,7 @@ void draw()
   
   // Get the next available client
   Client thisClient = server.available();
+
   // If the client is not null, and says something, display what it said
   if (thisClient != null) {
     String message = thisClient.readStringUntil('\n');
@@ -159,5 +188,20 @@ void draw()
   {
     line(i, 50 + beat.left.get(i)*50, i+1, 50 + beat.left.get(i+1)*50);
     line(i, 150 + beat.right.get(i)*50, i+1, 150 + beat.right.get(i+1)*50);
+  }
+
+  // Update the physics world
+  physics.update();
+
+  // Display all points
+  if (showParticles) {
+    cluster.display();
+    cluster2.display();
+  }
+
+  // If we want to see the physics
+  if (showPhysics) {
+    cluster.showConnections();
+    cluster2.showConnections();
   }
 }
