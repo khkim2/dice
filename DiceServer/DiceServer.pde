@@ -15,9 +15,11 @@ float DICE_THRESHOLD = 8.0;
 
 Minim minim;
 
-AudioPlayer beat, scratch;
-AudioPlayer[] phase1, phase2;
-AudioPlayer playing1, playing2;
+FilePlayer beat, scratch;
+FilePlayer[] phase1, phase2;
+FilePlayer playing1, playing2;
+Summer mixer;
+AudioOutput out;
 
 int port = 8080;       
 Server server;        
@@ -43,20 +45,29 @@ void setup()
   
   minim = new Minim(this);
 
-  beat = minim.loadFile("1_Beat_bip.wav");
-  beat.setGain(-10);
+  // get an AudioRecordingStream from Minim, which is what FilePlayer will control
+  beat = new FilePlayer(minim.loadFileStream("1_Beat_bip.wav", 1024, true));
   beat.loop();
-  
-  scratch = minim.loadFile("Scratch_EFX_bip.wav");
 
-  phase1 = new AudioPlayer[6];
-  phase2 = new AudioPlayer[6];
-  
+  scratch = new FilePlayer(minim.loadFileStream("Scratch_EFX_bip.wav", 1024, true));
+
+  phase1 = new FilePlayer[6];
+  phase2 = new FilePlayer[6];
   for (int i = 0; i < 6; i++)
   {
-    phase1[i] = minim.loadFile("A_" + (i+1) + "_bip.wav");
-    phase2[i] = minim.loadFile("B_" + (i+1) + "_bip.wav");
+    phase1[i] = new FilePlayer(
+      minim.loadFileStream("A_" + (i+1) + "_bip.wav", 1024, true));
+    phase2[i] = new FilePlayer(
+      minim.loadFileStream("B_" + (i+1) + "_bip.wav", 1024, true));
   }
+
+  mixer = new Summer();
+  out = minim.getLineOut();
+
+  Gain gain = new Gain(-10);
+  beat.patch(gain);  
+  gain.patch(mixer);
+  mixer.patch(out);
 
   // Initialize the physics
   physics = new VerletPhysics2D();
@@ -69,36 +80,31 @@ void setup()
 
 void setPlayer1(int index)
 {
-  if (playing1 != null) playing1.pause();
-  if (scratch.isPlaying()) scratch.pause();
-    
-  phase1[index].cue(beat.position());
-  phase1[index].loop();
+  if (playing1 != null) playing1.unpatch(mixer);
+  scratch.unpatch(mixer);
 
+  phase1[index].patch(mixer);
   playing1 = phase1[index];    
 }
 
 void setPlayer2(int index)
 {
-  if (playing2 != null) playing2.pause();
-  if (scratch.isPlaying()) scratch.pause();
-    
-  phase2[index].cue(beat.position());
-  phase2[index].loop();
+  if (playing2 != null) playing2.unpatch(mixer);
+  scratch.unpatch(mixer);
 
+  phase2[index].patch(mixer);
   playing2 = phase2[index];    
 }
 
 void playScratch()
 {
-  scratch.cue(0);
-  scratch.loop();
-  
-  if (playing1 != null) playing1.pause();
+  if (playing1 != null) playing1.unpatch(mixer);
   playing1 = null;
   
-  if (playing2 != null) playing2.pause();
+  if (playing2 != null) playing2.unpatch(mixer);
   playing2 = null;
+
+  scratch.patch(mixer);
 }
 
 void keyPressed()
@@ -184,10 +190,10 @@ void draw()
   text("" + number, 15, 15);  
 
   stroke(255);
-  for (int i = 0; i < beat.bufferSize() - 1; i++)
+  for (int i = 0; i < out.bufferSize() - 1; i++)
   {
-    line(i, 50 + beat.left.get(i)*50, i+1, 50 + beat.left.get(i+1)*50);
-    line(i, 150 + beat.right.get(i)*50, i+1, 150 + beat.right.get(i+1)*50);
+    line(i, 50 + out.left.get(i)*50, i+1, 50 + out.left.get(i+1)*50);
+    line(i, 150 + out.right.get(i)*50, i+1, 150 + out.right.get(i+1)*50);
   }
 
   // Update the physics world

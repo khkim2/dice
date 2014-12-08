@@ -49,14 +49,14 @@ class Cluster {
 
   // Draw all the internal connections
   void showConnections() {
-    stroke(255, beat.left.level()*800);
-    strokeWeight(beat.left.level()*5);
+    stroke(255, out.left.level()*800);
+    strokeWeight(out.left.level()*5);
     for (int i = 0; i < nodes.size()-1; i++) {
       VerletParticle2D pi = (VerletParticle2D) nodes.get(i);
       for (int j = i+1; j < nodes.size(); j++) {
         VerletParticle2D pj = (VerletParticle2D) nodes.get(j);
 
-        line(pi.x, pi.y+beat.left.get(i)*50, pj.x, pj.y+beat.right.get(i)*50);
+        line(pi.x, pi.y+out.left.get(i)*50, pj.x, pj.y+out.right.get(i)*50);
       }
     }
   }
@@ -112,7 +112,7 @@ class Cluster2 {
       for (int j = i+1; j < nodes.size(); j++) {
         VerletParticle2D pj = (VerletParticle2D) nodes.get(j);
 
-        line(pi.x, pi.y+beat.left.get(i)*50, pj.x, pj.y+beat.right.get(i)*50);
+        line(pi.x, pi.y+out.left.get(i)*50, pj.x, pj.y+out.right.get(i)*50);
       }
     }
   }

@@ -18,10 +18,10 @@ class Node extends VerletParticle2D {
 
   // All we're doing really is adding a display() function to a VerletParticle
   void display() {
-    fill(255,beat.left.level()*500);
+    fill(255,out.left.level()*500);
     stroke(random(255), random(255), random(255));
-    strokeWeight(beat.left.level()*50);
-    ellipse(x,y,beat.left.level()*50,beat.left.level()*50);
+    strokeWeight(out.left.level()*50);
+    ellipse(x,y,out.left.level()*50,out.left.level()*50);
   }
 }
 
