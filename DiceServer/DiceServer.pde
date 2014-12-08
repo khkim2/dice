@@ -115,8 +115,8 @@ void keyPressed()
 
   if (key == ' ') {
     physics.clear();
-    cluster = new Cluster(int(random(2, 20)), random(10, width/4), new Vec2D(width/5, height/1.6));
-    cluster2 = new Cluster2(int(random(2, 20)), random(10, width/3), new Vec2D(width/1.3, height/3.3));
+    cluster = new Cluster(int(random(1, 6)), random(100, width/4), new Vec2D(width/5, height/1.6));
+    cluster2 = new Cluster2(int(random(1, 6)), random(100, width/3), new Vec2D(width/1.3, height/3.3));
   }
 }
 
