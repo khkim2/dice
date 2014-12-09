@@ -114,6 +114,8 @@ void playScratch()
   playing2 = null;
 
   scratch.patch(mixer);
+
+  cluster.mergeCluster();
 }
 
 void keyPressed()

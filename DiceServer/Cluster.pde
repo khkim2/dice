@@ -27,6 +27,18 @@ class Cluster {
     updateCluster(nodes2, (index+1) * 2, random(100, width/3), new Vec2D(width/1.3, height/3.3));
   }
   
+  void mergeCluster() {
+    for (int i = 0; i < nodes1.size(); i++) {
+      VerletParticle2D n1 = nodes1.get(i);
+      for (int j = 0; j < nodes2.size(); j++) {
+        VerletParticle2D n2 = nodes2.get(j);
+        float diameter = random(100, width/5);
+        
+        physics.addSpring(new VerletSpring2D(n1, n2, diameter, 0.015));
+      }
+    }
+  }
+  
   // Update a Cluster with a number of nodes, a diameter, and centerpoint
   void updateCluster(ArrayList<Node> nodes, int n, float diameter, Vec2D center) {
     // Clear the existing nodes
