@@ -11,7 +11,7 @@ import toxi.geom.*;
 import toxi.physics2d.*;
 
 //float ROTATE_YZ = -31, ROTATE_XZ = -57;      
-float ROTATE_YZ = 0, ROTATE_XZ = 0;      
+float ROTATE_YZ = -20, ROTATE_XZ = 0;      
 float DICE_THRESHOLD = 8.0;
 
 Minim minim;
