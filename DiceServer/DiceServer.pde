@@ -10,7 +10,8 @@ import processing.net.*;
 import toxi.geom.*;
 import toxi.physics2d.*;
 
-float GSENSOR_ROTATE = 26 * 3.14159f / 180.f;
+//float ROTATE_YZ = -31, ROTATE_XZ = -57;      
+float ROTATE_YZ = 0, ROTATE_XZ = 0;      
 float DICE_THRESHOLD = 8.0;
 
 Minim minim;
@@ -149,12 +150,12 @@ void draw()
       sensor.z = float(value[2]);
 
       PVector rotate_yz = new PVector(sensor.y, sensor.z);
-      rotate_yz.rotate(-31 * 3.14159 / 180);
+      rotate_yz.rotate(ROTATE_YZ * 3.14159 / 180);
       sensor.y = rotate_yz.x;
       sensor.z = rotate_yz.y;      
 
       PVector rotate_xz = new PVector(sensor.x, sensor.z);
-      rotate_xz.rotate(-57 * 3.14159 / 180);
+      rotate_xz.rotate(ROTATE_XZ * 3.14159 / 180);
       sensor.x = rotate_xz.x;
       sensor.z = rotate_xz.y;      
       

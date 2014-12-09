@@ -27,7 +27,8 @@ public class MainActivity extends Activity implements SensorEventListener {
     //private static final int PORT = 80;
 
     //private static final String IP = "169.254.53.22";
-    private static final String IP = "192.168.2.1";
+    //private static final String IP = "192.168.2.1";
+    private static final String IP = "192.168.1.10";
     private static final int PORT = 8080;
 
     Button btnStart, btnSend;

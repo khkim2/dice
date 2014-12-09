@@ -37,8 +37,8 @@
       <file leaf-file-name="MainActivity.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/khkim/diceandroid/MainActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.6296296" vertical-offset="1812" max-vertical-offset="3105">
-              <caret line="175" column="6" selection-start-line="175" selection-start-column="6" selection-end-line="175" selection-end-column="6" />
+            <state vertical-scroll-proportion="0.3935185" vertical-offset="0" max-vertical-offset="3120">
+              <caret line="36" column="14" selection-start-line="36" selection-start-column="14" selection-end-line="36" selection-end-column="14" />
               <folding />
             </state>
           </provider>
@@ -750,7 +750,7 @@
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="718" />
+    <option name="x" value="51" />
     <option name="y" value="23" />
     <option name="width" value="1202" />
     <option name="height" value="1122" />
@@ -781,7 +781,16 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="Scope" />
+      <pane id="AndroidView">
+        <subPane>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="DiceAndroid" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
+            </PATH_ELEMENT>
+          </PATH>
+        </subPane>
+      </pane>
       <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
@@ -887,16 +896,7 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="AndroidView">
-        <subPane>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="DiceAndroid" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
-            </PATH_ELEMENT>
-          </PATH>
-        </subPane>
-      </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -1056,7 +1056,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="718" y="23" width="1202" height="1122" extended-state="6" />
+    <frame x="51" y="23" width="1202" height="1122" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -1111,8 +1111,16 @@
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/khkim/diceandroid/MainActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.6296296" vertical-offset="1812" max-vertical-offset="3105">
+        <state vertical-scroll-proportion="0.0" vertical-offset="1812" max-vertical-offset="3105">
           <caret line="175" column="6" selection-start-line="175" selection-start-column="6" selection-end-line="175" selection-end-column="6" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/khkim/diceandroid/MainActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.3935185" vertical-offset="0" max-vertical-offset="3120">
+          <caret line="36" column="14" selection-start-line="36" selection-start-column="14" selection-end-line="36" selection-end-column="14" />
           <folding />
         </state>
       </provider>
