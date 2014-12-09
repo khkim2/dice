@@ -192,7 +192,7 @@ void processClient(Client client)
   sensor.x = rotate_xz.x;
   sensor.z = rotate_xz.y;      
   
-  //println("sensor: " + sensor.x + ", " + sensor.y + ", " + sensor.z);
+  println("sensor: " + sensor.x + ", " + sensor.y + ", " + sensor.z);
 
   int new_number = -1;
   
@@ -209,7 +209,7 @@ void processClient(Client client)
     println("update1: " + number1 + " -> " + new_number);
     number1 = new_number;
     
-    if (number1 == 0)
+    if (number1 == 0 || number2 == 0)
     {
       playScratch();
     }
@@ -224,7 +224,7 @@ void processClient(Client client)
     println("update2: " + number2 + " -> " + new_number);
     number2 = new_number;
     
-    if (number2 == 0)
+    if (number1 == 0 || number2 == 0)
     {
       playScratch();
     }
