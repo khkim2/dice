@@ -76,6 +76,9 @@ void setup()
 
 void setPlayer1(int index)
 {
+  if (!beat.isPlaying())
+    beat.play();
+  
   if (playing1 != null) playing1.unpatch(mixer);
   scratch.unpatch(mixer);
 
@@ -86,6 +89,9 @@ void setPlayer1(int index)
 
 void setPlayer2(int index)
 {
+  if (!beat.isPlaying())
+    beat.play();
+
   if (playing2 != null) playing2.unpatch(mixer);
   scratch.unpatch(mixer);
 
@@ -95,6 +101,9 @@ void setPlayer2(int index)
 
 void playScratch()
 {
+  beat.pause();
+  beat.rewind();
+  
   if (playing1 != null) playing1.unpatch(mixer);
   playing1 = null;
   
