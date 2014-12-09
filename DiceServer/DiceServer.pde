@@ -36,7 +36,7 @@ Cluster cluster, cluster2;
 
 void setup()
 {
-  size(1024, 768);
+  size(800, 600);
   server = new Server(this, port);
   
   minim = new Minim(this);
@@ -79,6 +79,7 @@ void setPlayer1(int index)
   if (playing1 != null) playing1.unpatch(mixer);
   scratch.unpatch(mixer);
 
+  phase1[index].play(beat.position());
   phase1[index].patch(mixer);
   playing1 = phase1[index];    
 }
