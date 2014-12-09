@@ -35,14 +35,14 @@ VerletPhysics2D physics;
 Cluster cluster;
 
 // Grid
-int GridSize = 20;
+int GridSize = 50;
 int rows, cols;
 PVector[][] pt;
 color[][] fl;
 
 void setup()
 {
-  size(800, 600);
+  size(displayWidth, displayHeight);
   server = new Server(this, port);
   
   minim = new Minim(this);
@@ -192,7 +192,7 @@ void processClient(Client client)
   sensor.x = rotate_xz.x;
   sensor.z = rotate_xz.y;      
   
-  println("sensor: " + sensor.x + ", " + sensor.y + ", " + sensor.z);
+  //println("sensor: " + sensor.x + ", " + sensor.y + ", " + sensor.z);
 
   int new_number = -1;
   
@@ -307,10 +307,10 @@ void draw()
   cluster.display();
 
   // Debug for g-sensor 
-  stroke(255);
-  strokeWeight(1);
-  line(width/2, height/2, 
-    sensor.x / 9.8 * (width/2) + (width/2), 
-    sensor.y / 9.8 * (height/2) + (height/2));
-  text("" + number1 + " " + number2, 15, 15);  
+//  stroke(255);
+//  strokeWeight(1);
+//  line(width/2, height/2, 
+//    sensor.x / 9.8 * (width/2) + (width/2), 
+//    sensor.y / 9.8 * (height/2) + (height/2));
+//  text("" + number1 + " " + number2, 15, 15);  
 }
