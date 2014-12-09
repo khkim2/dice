@@ -192,7 +192,7 @@ void processClient(Client client)
   sensor.x = rotate_xz.x;
   sensor.z = rotate_xz.y;      
   
-  //println("sensor: " + sensor.x + ", " + sensor.y + ", " + sensor.z);
+  //println("sensor: " + ID + " " + sensor.x + ", " + sensor.y + ", " + sensor.z);
 
   int new_number = -1;
   
