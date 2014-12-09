@@ -9,17 +9,22 @@
 class Cluster {
 
   // A cluster is a grouping of nodes
-  ArrayList<Node> nodes;
+  ArrayList<Node> nodes1, nodes2;
  
-  Cluster(int n, float diameter, Vec2D center) {
-    // Initialize the ArrayList
-    nodes = new ArrayList<Node>();
-    
-    updateCluster(nodes, n, diameter, center);
+  Cluster() {
+    nodes1 = new ArrayList<Node>();
+    nodes2 = new ArrayList<Node>();
+
+    updateCluster1(0);
+    updateCluster2(0);    
   }
   
   void updateCluster1(int index) {
-    updateCluster(nodes, (index+1) * 2, random(100, width/4), new Vec2D(width/5, height/1.6));
+    updateCluster(nodes1, (index+1) * 2, random(100, width/4), new Vec2D(width/5, height/1.6));
+  }
+  
+  void updateCluster2(int index) {
+    updateCluster(nodes2, (index+1) * 2, random(100, width/3), new Vec2D(width/1.3, height/3.3));
   }
   
   // Update a Cluster with a number of nodes, a diameter, and centerpoint
@@ -48,13 +53,19 @@ class Cluster {
 
   void display() {
     // Show all the nodes
-    for (Node n : nodes) {
+    for (Node n : nodes1)
       n.display();
-    }
+    for (Node n : nodes2)
+      n.display();
   }
 
   // Draw all the internal connections
   void showConnections() {
+    showConnections(nodes1);
+    showConnections(nodes2);
+  }
+  
+  void showConnections(ArrayList<Node> nodes) {
     stroke(255, 100 + out.left.level()*800);
     strokeWeight(out.left.level()*5);
     for (int i = 0; i < nodes.size()-1; i++) {

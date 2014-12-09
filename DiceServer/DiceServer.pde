@@ -31,8 +31,8 @@ int number = 0;
 // Reference to physics world
 VerletPhysics2D physics;
 
-// A list of cluster objects
-Cluster cluster, cluster2;
+// A cluster objects
+Cluster cluster;
 
 void setup()
 {
@@ -70,8 +70,7 @@ void setup()
   physics.setWorldBounds(new Rect(10, 10, width-20, height-20));
 
   // Spawn a new random graph
-  cluster = new Cluster(8, 100, new Vec2D(width/5, height/1.6));
-  cluster2 = new Cluster(6, 100, new Vec2D(width/1.3, height/3.3));
+  cluster = new Cluster();
 }
 
 void setPlayer1(int index)
@@ -99,6 +98,8 @@ void setPlayer2(int index)
 
   phase2[index].patch(mixer);
   playing2 = phase2[index];    
+
+  cluster.updateCluster2(index);  
 }
 
 void playScratch()
@@ -126,11 +127,9 @@ void keyPressed()
   else if (key == 't') setPlayer2(4);
   else if (key == 'y') setPlayer2(5);
   else if (key == '0') playScratch();
-
-  if (key == ' ') {
-    physics.clear();
-    cluster = new Cluster(int(random(1, 6)), random(100, width/4), new Vec2D(width/5, height/1.6));
-    cluster2 = new Cluster(int(random(1, 6)), random(100, width/3), new Vec2D(width/1.3, height/3.3));
+  else if (key == ' ') {
+    setPlayer1((int)random(6));
+    setPlayer2((int)random(6));
   }
 }
 
@@ -216,7 +215,5 @@ void draw()
 
   // Draw cluster
   cluster.display();
-  cluster2.display();
   cluster.showConnections();
-  cluster2.showConnections();
 }
