@@ -118,7 +118,7 @@ public class MainActivity extends Activity implements SensorEventListener {
                     Log.i("AsyncTask", "doInBackground: Creating socket");
                     SocketAddress sockaddr = new InetSocketAddress(IP, PORT);
                     nsocket = new Socket();
-                    nsocket.connect(sockaddr, 5000); //10 second connection timeout
+                    nsocket.connect(sockaddr, 1000); //10 second connection timeout
                     if (nsocket.isConnected()) {
                         nis = nsocket.getInputStream();
                         nos = nsocket.getOutputStream();
