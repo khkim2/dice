@@ -34,6 +34,12 @@ VerletPhysics2D physics;
 // A cluster objects
 Cluster cluster;
 
+// Grid
+int GridSize = 20;
+int rows, cols;
+PVector[][] pt;
+color[][] fl;
+
 void setup()
 {
   size(800, 600);
@@ -74,6 +80,23 @@ void setup()
   
   setPlayer1(0);
   setPlayer2(0);
+
+  rows = height / GridSize;
+  cols = width / GridSize;  
+    
+  // Initialize grid points
+  colorMode(HSB, 255);
+  pt = new PVector[rows+1][cols+1];
+  fl = new color[rows+1][cols+1];
+  for (int y = 0; y < rows+1; y++)
+    for (int x = 0; x < cols+1; x++) {
+      pt[y][x] = new PVector(
+        // random in -GridSize/4 ~ +GridSize/4
+        x * GridSize + random(-GridSize/4, GridSize/4), 
+        y * GridSize + random(-GridSize/4, GridSize/4));
+        // random HSB color
+        fl[y][x] = color(0, random(180, 255), random(120, 255), 60);
+    }
 }
 
 void setPlayer1(int index)
@@ -191,21 +214,54 @@ void processClient(Client client)
   }
 }
 
+void updateGrid() {
+  float[] buffer = beat.getLastValues();
+  float level = 0;
+  for (int i = 0; i < buffer.length; i++)
+    level += buffer[i]*buffer[i];
+  level = sqrt(level / buffer.length);
+  level *= 10;
+
+  for (int y = 0; y < rows; y++)
+    for (int x = 0; x < cols; x++) {
+      pt[y][x] = new PVector(
+        pt[y][x].x + random(-level, level), 
+        pt[y][x].y + random(-level, level)); 
+        fl[y][x] = color(hue(fl[y][x]) + level, saturation(fl[y][x]), brightness(fl[y][x]), 60);
+    }
+}
+
 void draw()
 {
   background(0);
 
-  // network  
+  // Network  
   Client thisClient = server.available();
   if (thisClient != null)
     processClient(thisClient);
 
-  // debug for g-sensor 
+  // Debug for g-sensor 
   line(width/2, height/2, 
     sensor.x / 9.8 * (width/2) + (width/2), 
     sensor.y / 9.8 * (height/2) + (height/2));
    
   text("" + number, 15, 15);  
+
+  // Draw grid
+  updateGrid();
+  strokeWeight(0.5);
+  for (int y = 0; y < rows; y++)
+    for (int x = 0; x < cols; x++) {
+      fill(0);
+      stroke(fl[y][x]); 
+      //fill(fl[y][x]);
+      beginShape();
+      vertex(pt[y][x].x, pt[y][x].y);
+      vertex(pt[y][x+1].x, pt[y][x+1].y);
+      vertex(pt[y+1][x+1].x, pt[y+1][x+1].y);
+      vertex(pt[y+1][x].x, pt[y+1][x].y);
+      endShape();
+    }
 
   // Draw osiloscope
   Vec2D v1 = cluster.getCenter1();
@@ -213,7 +269,7 @@ void draw()
   //line(v1.x, v1.y, v2.x, v2.y);
 
   //stroke(255, 100 + out.mix.level()*800);
-  stroke(80);
+  stroke(100);
   strokeWeight(out.mix.level()*5);
 
   pushMatrix();
