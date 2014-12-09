@@ -10,18 +10,25 @@ class Cluster {
 
   // A cluster is a grouping of nodes
   ArrayList<Node> nodes;
-
-  float diameter;
-
-  // We initialize a Cluster with a number of nodes, a diameter, and centerpoint
-  Cluster(int n, float d, Vec2D center) {
-
+ 
+  Cluster(int n, float diameter, Vec2D center) {
     // Initialize the ArrayList
     nodes = new ArrayList<Node>();
-
-    // Set the diameter
-    diameter = d;
-
+    
+    updateCluster(nodes, n, diameter, center);
+  }
+  
+  void updateCluster1(int index) {
+    updateCluster(nodes, (index+1) * 2, random(100, width/4), new Vec2D(width/5, height/1.6));
+  }
+  
+  // Update a Cluster with a number of nodes, a diameter, and centerpoint
+  void updateCluster(ArrayList<Node> nodes, int n, float diameter, Vec2D center) {
+    // Clear the existing nodes
+    for (int i = 0; i < nodes.size(); i++)
+      physics.removeParticle(nodes.get(i));
+    nodes.clear();
+    
     // Create the nodes
     for (int i = 0; i < n; i++) {
       // We can't put them right on top of each other
@@ -45,7 +52,6 @@ class Cluster {
       n.display();
     }
   }
-
 
   // Draw all the internal connections
   void showConnections() {

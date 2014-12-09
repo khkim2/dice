@@ -84,7 +84,9 @@ void setPlayer1(int index)
 
   phase1[index].play(beat.position());
   phase1[index].patch(mixer);
-  playing1 = phase1[index];    
+  playing1 = phase1[index];
+
+  cluster.updateCluster1(index);  
 }
 
 void setPlayer2(int index)
