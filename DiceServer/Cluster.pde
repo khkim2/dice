@@ -32,7 +32,7 @@ class Cluster {
       VerletParticle2D n1 = nodes1.get(i);
       for (int j = 0; j < nodes2.size(); j++) {
         VerletParticle2D n2 = nodes2.get(j);
-        float diameter = random(100, width/4);
+        float diameter = random(10, 150);
         
         physics.addSpring(new VerletSpring2D(n1, n2, diameter, 0.002));
       }
