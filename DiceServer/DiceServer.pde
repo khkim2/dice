@@ -71,6 +71,9 @@ void setup()
 
   // Spawn a new random graph
   cluster = new Cluster();
+  
+  setPlayer1(0);
+  setPlayer2(0);
 }
 
 void setPlayer1(int index)
@@ -209,6 +212,10 @@ void draw()
   Vec2D v2 = cluster.getCenter2();
   //line(v1.x, v1.y, v2.x, v2.y);
 
+  //stroke(255, 100 + out.mix.level()*800);
+  stroke(80);
+  strokeWeight(out.mix.level()*5);
+
   pushMatrix();
   translate(v1.x, v1.y);
   rotate(atan2(v2.y - v1.y, v2.x - v1.x));
@@ -227,5 +234,4 @@ void draw()
 
   // Draw cluster
   cluster.display();
-  cluster.showConnections();
 }

@@ -80,22 +80,25 @@ class Cluster {
   } 
   
   void display() {
-    // Show all the nodes
-    for (Node n : nodes1)
-      n.display();
-    for (Node n : nodes2)
-      n.display();
+    display(nodes1, playing1 != null ? playing1 : scratch);
+    display(nodes2, playing2 != null ? playing2 : scratch);
   }
 
-  // Draw all the internal connections
-  void showConnections() {
-    showConnections(nodes1);
-    showConnections(nodes2);
-  }
-  
-  void showConnections(ArrayList<Node> nodes) {
-    stroke(255, 100 + out.left.level()*800);
-    strokeWeight(out.left.level()*5);
+  void display(ArrayList<Node> nodes, FilePlayer player) {
+    float[] buffer = player.getLastValues();
+    float level = 0;
+    for (int i = 0; i < buffer.length; i++)
+      level += buffer[i]*buffer[i];
+    level = sqrt(level / buffer.length);
+
+    // Draw nodes
+    for (Node n : nodes)
+      n.display(level);
+
+    // Draw lines between nodes    
+    stroke(255, 100 + level*800);
+    strokeWeight(level*5);
+    
     for (int i = 0; i < nodes.size()-1; i++) {
       VerletParticle2D pi = (VerletParticle2D) nodes.get(i);
       for (int j = i+1; j < nodes.size(); j++) {
