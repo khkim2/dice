@@ -132,70 +132,76 @@ void keyPressed()
   }
 }
 
+void processClient(Client client)
+{
+  String message = client.readStringUntil('\n');
+  if (message == null) return;
+  
+  // Ignore remain messages
+  client.clear(); 
+  
+  String[] value = split(message, '|');
+  if (value.length != 3)
+  {
+    println("ERROR: failed to parse message from client");
+    return;
+  }
+
+  sensor.x = float(value[0]);
+  sensor.y = float(value[1]);
+  sensor.z = float(value[2]);
+
+  PVector rotate_yz = new PVector(sensor.y, sensor.z);
+  rotate_yz.rotate(ROTATE_YZ * 3.14159 / 180);
+  sensor.y = rotate_yz.x;
+  sensor.z = rotate_yz.y;      
+
+  PVector rotate_xz = new PVector(sensor.x, sensor.z);
+  rotate_xz.rotate(ROTATE_XZ * 3.14159 / 180);
+  sensor.x = rotate_xz.x;
+  sensor.z = rotate_xz.y;      
+  
+  //println("sensor: " + sensor.x + ", " + sensor.y + ", " + sensor.z);
+
+  int new_number = -1;
+  
+  if (sensor.x > DICE_THRESHOLD) new_number = 1;
+  else if (sensor.x < -DICE_THRESHOLD) new_number = 6;
+  else if (sensor.y > DICE_THRESHOLD) new_number = 2;
+  else if (sensor.y < -DICE_THRESHOLD) new_number = 5;
+  else if (sensor.z > DICE_THRESHOLD) new_number = 3;
+  else if (sensor.z < -DICE_THRESHOLD) new_number = 4;
+  else new_number = 0;
+  
+  if (number != new_number)
+  {
+    println("update: " + number + " -> " + new_number);
+    number = new_number;
+    
+    if (number == 0)
+      playScratch();
+    else
+      setPlayer1(number - 1);
+  }
+}
+
 void draw()
 {
   background(0);
-  
-  // Get the next available client
+
+  // network  
   Client thisClient = server.available();
-  if (thisClient != null) {
-    String message = thisClient.readStringUntil('\n');
-    if (message != null) {
-      // Ignore remain messages
-      thisClient.clear(); 
-      
-      String[] value = split(message, '|');
-      if (value.length != 3)
-      {
-        println("ERROR: failed to parse message from client");
-        return;
-      }
+  if (thisClient != null)
+    processClient(thisClient);
 
-      sensor.x = float(value[0]);
-      sensor.y = float(value[1]);
-      sensor.z = float(value[2]);
-
-      PVector rotate_yz = new PVector(sensor.y, sensor.z);
-      rotate_yz.rotate(ROTATE_YZ * 3.14159 / 180);
-      sensor.y = rotate_yz.x;
-      sensor.z = rotate_yz.y;      
-
-      PVector rotate_xz = new PVector(sensor.x, sensor.z);
-      rotate_xz.rotate(ROTATE_XZ * 3.14159 / 180);
-      sensor.x = rotate_xz.x;
-      sensor.z = rotate_xz.y;      
-      
-      //println("sensor: " + sensor.x + ", " + sensor.y + ", " + sensor.z);
-
-      int new_number = -1;
-      
-      if (sensor.x > DICE_THRESHOLD) new_number = 1;
-      else if (sensor.x < -DICE_THRESHOLD) new_number = 6;
-      else if (sensor.y > DICE_THRESHOLD) new_number = 2;
-      else if (sensor.y < -DICE_THRESHOLD) new_number = 5;
-      else if (sensor.z > DICE_THRESHOLD) new_number = 3;
-      else if (sensor.z < -DICE_THRESHOLD) new_number = 4;
-      else new_number = 0;
-      
-      if (number != new_number)
-      {
-        println("update: " + number + " -> " + new_number);
-        number = new_number;
-        
-        if (number == 0)
-          playScratch();
-        else
-          setPlayer1(number - 1);
-      }
-    } 
-  }
- 
+  // debug for g-sensor 
   line(width/2, height/2, 
     sensor.x / 9.8 * (width/2) + (width/2), 
     sensor.y / 9.8 * (height/2) + (height/2));
    
   text("" + number, 15, 15);  
 
+  // Draw osiloscope
   stroke(255);
   for (int i = 0; i < out.bufferSize() - 1; i++)
   {
@@ -206,11 +212,9 @@ void draw()
   // Update the physics world
   physics.update();
 
-  // Display all points
+  // Draw cluster
   cluster.display();
   cluster2.display();
-
-  // If we want to see the physics
   cluster.showConnections();
   cluster2.showConnections();
 }
