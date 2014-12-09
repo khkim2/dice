@@ -205,12 +205,22 @@ void draw()
   text("" + number, 15, 15);  
 
   // Draw osiloscope
-  stroke(255);
-  for (int i = 0; i < out.bufferSize() - 1; i++)
+  Vec2D v1 = cluster.getCenter1();
+  Vec2D v2 = cluster.getCenter2();
+  //line(v1.x, v1.y, v2.x, v2.y);
+
+  pushMatrix();
+  translate(v1.x, v1.y);
+  rotate(atan2(v2.y - v1.y, v2.x - v1.x));
+  scale(v1.distanceTo(v2) / width, 1.0);
+  
+  int size = out.bufferSize();
+  for (int i = 0; i < width; i++)
   {
-    line(i, 50 + out.left.get(i)*50, i+1, 50 + out.left.get(i+1)*50);
-    line(i, 150 + out.right.get(i)*50, i+1, 150 + out.right.get(i+1)*50);
+    line(i, out.left.get(i % size) * 50, i+1, out.left.get((i+1) % size) * 50);
+    line(i, out.right.get(i % size) * 50, i+1, out.right.get((i+1) % size) * 50);
   }
+  popMatrix();
 
   // Update the physics world
   physics.update();

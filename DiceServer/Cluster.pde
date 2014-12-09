@@ -63,6 +63,22 @@ class Cluster {
     }
   }
 
+  Vec2D getCenter1() {
+    return averageNodes(nodes1);
+  }
+  
+  Vec2D getCenter2() {
+    return averageNodes(nodes2);
+  }
+
+  Vec2D averageNodes(ArrayList<Node> nodes) {
+    Vec2D sum = new Vec2D(0, 0);
+    for (int i = 0; i < nodes.size(); i++)
+      sum = sum.add(nodes.get(i));
+      
+    return new Vec2D(sum.x / nodes.size(), sum.y / nodes.size());
+  } 
+  
   void display() {
     // Show all the nodes
     for (Node n : nodes1)
