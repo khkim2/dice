@@ -240,13 +240,6 @@ void draw()
   if (thisClient != null)
     processClient(thisClient);
 
-  // Debug for g-sensor 
-  line(width/2, height/2, 
-    sensor.x / 9.8 * (width/2) + (width/2), 
-    sensor.y / 9.8 * (height/2) + (height/2));
-   
-  text("" + number, 15, 15);  
-
   // Draw grid
   updateGrid();
   strokeWeight(0.5);
@@ -290,4 +283,12 @@ void draw()
 
   // Draw cluster
   cluster.display();
+
+  // Debug for g-sensor 
+  stroke(255);
+  strokeWeight(1);
+  line(width/2, height/2, 
+    sensor.x / 9.8 * (width/2) + (width/2), 
+    sensor.y / 9.8 * (height/2) + (height/2));
+  text("" + number, 15, 15);  
 }
