@@ -170,6 +170,7 @@ public class MainActivity extends Activity implements SensorEventListener {
                 if (nsocket.isConnected()) {
                     //Log.i("AsyncTask", "SendDataToNetwork: Writing received message to socket");
                     nos.write(cmd.getBytes());
+                    nos.flush();
                 } else {
                     //Log.i("AsyncTask", "SendDataToNetwork: Cannot send message. Socket is closed");
                 }

@@ -133,11 +133,12 @@ void draw()
   
   // Get the next available client
   Client thisClient = server.available();
-
-  // If the client is not null, and says something, display what it said
   if (thisClient != null) {
     String message = thisClient.readStringUntil('\n');
     if (message != null) {
+      // Ignore remain messages
+      thisClient.clear(); 
+      
       String[] value = split(message, '|');
       if (value.length != 3)
       {
