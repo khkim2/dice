@@ -49,64 +49,8 @@ class Cluster {
 
   // Draw all the internal connections
   void showConnections() {
-    stroke(255, out.left.level()*800);
+    stroke(255, 100 + out.left.level()*800);
     strokeWeight(out.left.level()*5);
-    for (int i = 0; i < nodes.size()-1; i++) {
-      VerletParticle2D pi = (VerletParticle2D) nodes.get(i);
-      for (int j = i+1; j < nodes.size(); j++) {
-        VerletParticle2D pj = (VerletParticle2D) nodes.get(j);
-
-        line(pi.x, pi.y+out.left.get(i)*50, pj.x, pj.y+out.right.get(i)*50);
-      }
-    }
-  }
-}
-
-class Cluster2 {
-
-  // A cluster is a grouping of nodes
-  ArrayList<Node> nodes;
-
-  float diameter;
-
-  // We initialize a Cluster with a number of nodes, a diameter, and centerpoint
-  Cluster2(int n, float d, Vec2D center) {
-
-    // Initialize the ArrayList
-    nodes = new ArrayList<Node>();
-
-    // Set the diameter
-    diameter = d;
-
-    // Create the nodes
-    for (int i = 0; i < n; i++) {
-      // We can't put them right on top of each other
-      nodes.add(new Node(center.add(Vec2D.randomVector())));
-    }
-
-    // Connect all the nodes with a Spring
-    for (int i = 0; i < nodes.size()-1; i++) {
-      VerletParticle2D ni = nodes.get(i);
-      for (int j = i+1; j < nodes.size(); j++) {
-        VerletParticle2D nj = nodes.get(j);
-        // A Spring needs two particles, a resting length, and a strength
-        physics.addSpring(new VerletSpring2D(ni, nj, diameter, 0.01));
-      }
-    }
-  }
-
-  void display() {
-    // Show all the nodes
-    for (Node n : nodes) {
-      n.display();
-    }
-  }
-
-
-  // Draw all the internal connections
-  void showConnections() {
-    stroke(255, 150);
-    strokeWeight(1);
     for (int i = 0; i < nodes.size()-1; i++) {
       VerletParticle2D pi = (VerletParticle2D) nodes.get(i);
       for (int j = i+1; j < nodes.size(); j++) {

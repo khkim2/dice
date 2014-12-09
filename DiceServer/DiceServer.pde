@@ -32,12 +32,7 @@ int number = 0;
 VerletPhysics2D physics;
 
 // A list of cluster objects
-Cluster cluster;
-Cluster2 cluster2;
-
-// Boolean that indicates whether we draw connections or not
-boolean showPhysics = true;
-boolean showParticles = true;
+Cluster cluster, cluster2;
 
 void setup()
 {
@@ -76,7 +71,7 @@ void setup()
 
   // Spawn a new random graph
   cluster = new Cluster(8, 100, new Vec2D(width/5, height/1.6));
-  cluster2 = new Cluster2(6, 100, new Vec2D(width/1.3, height/3.3));
+  cluster2 = new Cluster(6, 100, new Vec2D(width/1.3, height/3.3));
 }
 
 void setPlayer1(int index)
@@ -123,13 +118,13 @@ void keyPressed()
   if (key == ' ') {
     physics.clear();
     cluster = new Cluster(int(random(1, 6)), random(100, width/4), new Vec2D(width/5, height/1.6));
-    cluster2 = new Cluster2(int(random(1, 6)), random(100, width/3), new Vec2D(width/1.3, height/3.3));
+    cluster2 = new Cluster(int(random(1, 6)), random(100, width/3), new Vec2D(width/1.3, height/3.3));
   }
 }
 
 void draw()
 {
-  background(128);
+  background(0);
   
   // Get the next available client
   Client thisClient = server.available();
@@ -202,14 +197,10 @@ void draw()
   physics.update();
 
   // Display all points
-  if (showParticles) {
-    cluster.display();
-    cluster2.display();
-  }
+  cluster.display();
+  cluster2.display();
 
   // If we want to see the physics
-  if (showPhysics) {
-    cluster.showConnections();
-    cluster2.showConnections();
-  }
+  cluster.showConnections();
+  cluster2.showConnections();
 }
