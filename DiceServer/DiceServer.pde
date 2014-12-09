@@ -26,7 +26,7 @@ int port = 8080;
 Server server;        
 
 PVector sensor = new PVector();
-int number = 0;
+int number1 = 1, number2 = 1;
 
 // Reference to physics world
 VerletPhysics2D physics;
@@ -78,8 +78,8 @@ void setup()
   // Spawn a new random graph
   cluster = new Cluster();
   
-  setPlayer1(0);
-  setPlayer2(0);
+  setPlayer1(number1 - 1);
+  setPlayer2(number2 - 1);
 
   rows = height / GridSize;
   cols = width / GridSize;  
@@ -170,15 +170,17 @@ void processClient(Client client)
   client.clear(); 
   
   String[] value = split(message, '|');
-  if (value.length != 3)
+  if (value.length != 4)
   {
     println("ERROR: failed to parse message from client");
     return;
   }
 
-  sensor.x = float(value[0]);
-  sensor.y = float(value[1]);
-  sensor.z = float(value[2]);
+  int ID = int(value[0]);
+  //println(ID);
+  sensor.x = float(value[1]);
+  sensor.y = float(value[2]);
+  sensor.z = float(value[3]);
 
   PVector rotate_yz = new PVector(sensor.y, sensor.z);
   rotate_yz.rotate(ROTATE_YZ * 3.14159 / 180);
@@ -202,15 +204,35 @@ void processClient(Client client)
   else if (sensor.z < -DICE_THRESHOLD) new_number = 4;
   else new_number = 0;
   
-  if (number != new_number)
+  if (ID == 12 && number1 != new_number)
   {
-    println("update: " + number + " -> " + new_number);
-    number = new_number;
+    println("update1: " + number1 + " -> " + new_number);
+    number1 = new_number;
     
-    if (number == 0)
+    if (number1 == 0)
+    {
       playScratch();
+    }
     else
-      setPlayer1(number - 1);
+    {
+      setPlayer1(number1 - 1);
+      setPlayer2(number2 - 1);
+    }
+  }
+  else if (ID == 34 && number2 != new_number)
+  {
+    println("update2: " + number2 + " -> " + new_number);
+    number2 = new_number;
+    
+    if (number2 == 0)
+    {
+      playScratch();
+    }
+    else
+    {
+      setPlayer1(number1 - 1);
+      setPlayer2(number2 - 1);
+    }
   }
 }
 
@@ -290,5 +312,5 @@ void draw()
   line(width/2, height/2, 
     sensor.x / 9.8 * (width/2) + (width/2), 
     sensor.y / 9.8 * (height/2) + (height/2));
-  text("" + number, 15, 15);  
+  text("" + number1 + " " + number2, 15, 15);  
 }

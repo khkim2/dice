@@ -31,6 +31,9 @@ public class MainActivity extends Activity implements SensorEventListener {
     private static final String IP = "192.168.1.11";
     private static final int PORT = 8080;
 
+    private static final int ID = 12;
+    //private static final int ID = 34;
+
     Button btnStart, btnSend;
     TextView textStatus;
     NetworkTask networkTask;
@@ -83,7 +86,7 @@ public class MainActivity extends Activity implements SensorEventListener {
         float y = event.values[1];
         float z = event.values[2];
 
-        String message = x + "|" + y + "|" + z + "\n";
+        String message = ID + "|" + x + "|" + y + "|" + z + "\n";
         //System.out.print(message);
         networkTask.SendDataToNetwork(message);
     }
