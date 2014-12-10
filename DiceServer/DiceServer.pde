@@ -12,7 +12,7 @@ import toxi.physics2d.*;
 
 //float ROTATE_YZ = -31, ROTATE_XZ = -57;      
 float ROTATE_YZ = -20, ROTATE_XZ = 0;      
-float DICE_THRESHOLD = 8.0;
+float DICE_THRESHOLD = 8.6;
 
 Minim minim;
 
@@ -35,7 +35,7 @@ VerletPhysics2D physics;
 Cluster cluster;
 
 // Grid
-int GridSize = 50;
+int GridSize = 160;
 int rows, cols;
 PVector[][] pt;
 color[][] fl;
@@ -139,6 +139,7 @@ void playScratch()
   if (playing2 != null) playing2.unpatch(mixer);
   playing2 = null;
 
+  scratch.loop();
   scratch.patch(mixer);
 
   cluster.mergeCluster();
@@ -242,14 +243,14 @@ void updateGrid() {
   for (int i = 0; i < buffer.length; i++)
     level += buffer[i]*buffer[i];
   level = sqrt(level / buffer.length);
-  level *= 10;
+  level *= 15;
 
   for (int y = 0; y < rows; y++)
     for (int x = 0; x < cols; x++) {
       pt[y][x] = new PVector(
         pt[y][x].x + random(-level, level), 
         pt[y][x].y + random(-level, level)); 
-        fl[y][x] = color(hue(fl[y][x]) + level, saturation(fl[y][x]), brightness(fl[y][x]), 60);
+        fl[y][x] = color((hue(fl[y][x]) + level) % 255, saturation(fl[y][x]), brightness(fl[y][x]), 7);
     }
 }
 
@@ -264,12 +265,12 @@ void draw()
 
   // Draw grid
   updateGrid();
-  strokeWeight(0.5);
+  strokeWeight(100 + out.mix.level() * 300);
+  strokeCap(SQUARE);
   for (int y = 0; y < rows; y++)
     for (int x = 0; x < cols; x++) {
       fill(0);
       stroke(fl[y][x]); 
-      //fill(fl[y][x]);
       beginShape();
       vertex(pt[y][x].x, pt[y][x].y);
       vertex(pt[y][x+1].x, pt[y][x+1].y);
@@ -285,7 +286,7 @@ void draw()
 
   //stroke(255, 100 + out.mix.level()*800);
   stroke(100);
-  strokeWeight(out.mix.level()*5);
+  strokeWeight(0.5+out.mix.level()*10);
 
   pushMatrix();
   translate(v1.x, v1.y);
@@ -293,10 +294,15 @@ void draw()
   scale(v1.distanceTo(v2) / width, 1.0);
   
   int size = out.bufferSize();
-  for (int i = 0; i < width; i++)
+//  for (int i = 0; i < width; i++)
+//  {
+//    line(i, out.left.get(i % size) * 80, i+1, out.left.get((i+1) % size) * 80);
+//    line(i, out.right.get(i % size) * 80, i+1, out.right.get((i+1) % size) * 80);
+//  }
+  for (int i = 0; i < width; i += 40)
   {
-    line(i, out.left.get(i % size) * 50, i+1, out.left.get((i+1) % size) * 50);
-    line(i, out.right.get(i % size) * 50, i+1, out.right.get((i+1) % size) * 50);
+    line(i - 20, out.left.get(i % size) * 100, i + 20, out.left.get(i % size) * 100);
+    line(i - 20, out.right.get(i % size) * 100, i + 20, out.right.get(i % size) * 100);
   }
   popMatrix();
 

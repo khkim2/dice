@@ -20,11 +20,11 @@ class Cluster {
   }
   
   void updateCluster1(int index) {
-    updateCluster(nodes1, (index+1) * 2, random(100, width/4), new Vec2D(width/5, height/1.6));
+    updateCluster(nodes1, (index+1) * 2 + 1, random(180, width/4), new Vec2D(width/5, height/1.6));
   }
   
   void updateCluster2(int index) {
-    updateCluster(nodes2, (index+1) * 2, random(100, width/3), new Vec2D(width/1.3, height/3.3));
+    updateCluster(nodes2, (index+1) * 2 + 1, random(180, width/3), new Vec2D(width/1.3, height/3.3));
   }
   
   void mergeCluster() {
@@ -96,8 +96,8 @@ class Cluster {
       n.display(level);
 
     // Draw lines between nodes    
-    stroke(255, 100 + level*800);
-    strokeWeight(level*5);
+    stroke(255, 150 + level*800);
+    strokeWeight(level*15);
     
     for (int i = 0; i < nodes.size()-1; i++) {
       VerletParticle2D pi = (VerletParticle2D) nodes.get(i);
